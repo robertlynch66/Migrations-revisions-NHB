@@ -5508,3 +5508,69 @@ model <- map2stan(
 path<- (paste0("results/"))
 filename <- "model_70_outbred_before_w_intxs.rds"
 saveRDS(model, paste0(path, filename))
+
+data_list <- list(
+  kids = m$kids,
+  hypergamy = m$hypergamy,
+  outbred = m$outbred,
+  returnedkarelia = m$returnedkarelia,
+  sex = m$sex,
+  education = m$education,
+  agriculture = m$agricult,
+  technical = m$technical,
+  factory = m$factory,
+  service = m$service,
+  office = m$office,
+  business = m$business,
+  transport = m$transport,
+  age = m$age,
+  population = m$log_pop,
+  birthplace_id_seq = m$birthplace_id_seq
+)
+model <- map2stan(
+  alist(
+    kids ~ dpois (lambda),
+    # Here is the model with all the predictors
+    log(lambda) <- a + a_birthplace[birthplace_id_seq] +
+      bhyp * hypergamy +
+      #brk * returnedkarelia +
+      bs * sex +
+      bob *outbred +
+      bed *education +
+      bag * agriculture +
+      btech *technical +
+      bfact * factory +
+      bserv * service +
+      boff * office +
+      bbus * business +
+      btrans * transport +
+      bage * age +
+      bpop * population +
+      bmaw * married_after +
+      bobs * outbred * sex +
+      bobhyp * outbred * hypergamy +
+      bobage * outbred * age,
+    bobmaw * outbred * married_after +
+    bmawrk * married_after * returnedkarelia +
+    bmawsex * married_after * sex,
+    brksex *returnedkarelia * sex +
+    brkage * returnedkarelia*age,
+    a_birthplace[birthplace_id_seq] ~ dnorm(0, sigma),
+    sigma ~ dcauchy(0,1),
+    a ~ dnorm (0,1),
+    
+    # priors for all slopes (b terms) in main model
+    c(bhyp, bob, bs, bed, bag, btech, bfact, bserv, boff, bbus, btrans, bage, bpop,
+      bobs,bobage,bobhyp,bobmaw,bmawrk,bmawsex,brksex,brkage) ~ dnorm(0,1)
+  ),
+  data=data_list, iter=8000, warmup=2000, control=list(max_treedepth=20),start=list(
+    bhyp=0,  brk=0, bob=0, bs=0, bed=0, bag=0, btech=0, bfact=0, bserv=0, boff=0, bbus=0, btrans=0, 
+    bage=0, bpop=0,  bobage=0,bobhyp=0,
+    bobs=0,bobmaw=0,bmawrk=0,bmawsex=0,brksex=0,brkage=0
+  ),
+  chains=4,cores=4)
+
+path<- (paste0("results/"))
+filename <- "Model_kids_all_w_all_INTX.rds"
+
+saveRDS(model, paste0(path, filename))

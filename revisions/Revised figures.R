@@ -901,6 +901,95 @@ KB <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models 
 # load main models
 KALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
 
+#load packages
+library(dplyr)
+library(rethinking)
+library(tidybayes)
+library(bayesplot)
+library(tidybayes.rethinking)
+library(data.table)
+library(colortools)
+library(ggpubr)
+person_data <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/person_data.rds")
+m<- person_data
+m <- m %>% filter(birthregion == "karelia" & birthyear<1926 & birthyear>1870)
+m$hypergamy <- m$social_class-m$social_class_spouse
+m$hypergamy <- ifelse(m$hypergamy<0,-1, ifelse(m$hypergamy>0, 1,0))
+
+m$married_after <- ifelse(m$weddingyear<1945 | is.na(m$weddingyear), 0, 1)
+m$log_pop <- log(m$birthpopulation)
+m$log_pop <- m$log_pop-min(m$log_pop, na.rm=TRUE)
+m$log_pop <- m$log_pop / max(m$log_pop, na.rm=TRUE)
+m$fdf_log_pop <- log(m$fdf_population)
+m$fdf_log_pop <- m$fdf_log_pop-min(m$fdf_log_pop, na.rm=TRUE)
+m$fdf_log_pop <- m$fdf_log_pop/max(m$fdf_log_pop, na.rm=TRUE)
+m$age <- 1944- m$birthyear
+m$age_1940 <- 1940-m$birthyear
+m$age <- m$age - min (m$age)
+m$age <- m$age/ max(m$age)
+m$census_1950 <- as.factor(m$'1950_census')
+m$technical<- ifelse(m$census_1950==0, 1, 0)
+m$office<- ifelse(m$census_1950==1, 1, 0)
+m$business<- ifelse(m$census_1950==2, 1, 0)
+m$agricult<- ifelse(m$census_1950==3, 1, 0)
+m$transport<- ifelse(m$census_1950==5, 1, 0)
+m$factory<- ifelse(m$census_1950==6, 1, 0)
+m$service<- ifelse(m$census_1950==8, 1, 0)
+
+
+
+
+m<- m %>% dplyr::select(kids,hypergamy,outbred,returnedkarelia,sex, age,log_pop, education, agricult, technical,factory,service,
+                        office,business,transport, birthplaceid,married_after,age_1940)
+m <- m[complete.cases(m),] # N=26,757
+
+# split data into returned and remained groups and before and after war
+# Returned == 1
+returned <- m %>% filter(returnedkarelia==1)
+remained <- m %>% filter(returnedkarelia==0)
+#married before 1945 or unknown
+before <- m %>% filter(married_after==0)
+# married after 1945 for sure
+after <- m %>% filter(married_after==1)
+
+
+retb<- m%>% filter(returnedkarelia==1 & married_after==0)
+remb <- m%>% filter(returnedkarelia==0 & married_after==0)
+
+reta<- m%>% filter(returnedkarelia==1 & married_after==1)
+rema <- m%>% filter(returnedkarelia==0 & married_after==1)
+# load graphics packages
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(ggstance)
+library(rstan)
+library(tidybayes)
+library(emmeans)
+library(broom)
+library(brms)
+library(modelr)
+library(forcats)
+
+
+# load models from table s4
+OBRT <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_51_outbred_before_returned_no_intxs.rds")
+OBRM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_43_outbred_before_remained_no_intxs.rds")
+OART <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_12_outbred_returned_after.rds")
+OARM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_11_outbred_remained_after.rds")
+KBRT <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_50_kids_before_returned_no_intxs.rds")
+KBRM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_42_kids_before_remained_no_intxs.rds")
+KART <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_10_kids_returned_after.rds")
+KARM <-readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_9_kids_remained_after.rds")
+
+## before and after models- table s2
+KA <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
+KB <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
+
+
+# load main models
+KALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
+
 attach(m)
 Kretb <- tidyr::crossing(
   # the "L" makes the value an integer, avoiding possible errors
@@ -1250,7 +1339,7 @@ int_2<- hdi(data4$lambda,credMass = 0.89)
 # yields a range of 2.79 to 3.13
 # subset data
 data4 <- data4[which(data4$lambda >min(int_2) & data4$lambda < max(int_2)), ]
-data4 <- mutate(data4, newlambda = ifelse(outbred==1, lambda+0.15, lambda-0.15))
+
 
 #males returned/ no rt, females tr/no rt, males inbred, females inbred
 
@@ -1674,7 +1763,7 @@ int_2<- hdi(data8$p,credMass = 0.89)
 # yields a range of 2.79 to 3.13
 # subset data
 data8 <- data8[which(data8$p >min(int_2) & data8$p < max(int_2)), ]
-data8 <- mutate(data8, newp = ifelse(hypergamy==1, p+0.05, p-0.05))
+
 
 #males returned/ no rt, females tr/no rt, males inbred, females inbred
 
@@ -1799,3 +1888,50 @@ df_karm <- tidy_link(Krema, KALL) %>% as.data.frame()
 mean(df_karm$lambda)
 std <- function(x) sd(x)/sqrt(length(x))
 hdi(df_karm$lambda)
+
+#### Figure 1 maps
+# make a map of Karelia and plot where evacuess were at different times - ?based on education or occupation
+library(ggplot2)
+library(ggmap)
+library(dplyr)
+locate <- readRDS("locate.rds")
+# filter data for 1937, 1943 and 1947
+locate_1937<- locate %>% filter (years==1930 & lat.x<62.2 & lon.x !=27.52 & lon.x!=28.01) %>% as.data.frame()
+locate_1943<- locate %>% filter (years==1943 ) %>% as.data.frame()
+locate_1945<- locate %>% filter (years==1945 & location2 !=301 ) %>% as.data.frame()
+al1 = get_map(location = c(lon = 28 , lat = 61), zoom = 5, maptype = "terrain")
+p37<- ggmap(al1)+geom_count(data=locate_1937, 
+                            aes(x=lon.x, y=lat.x), col="darkred",fill="darkred",alpha=0.7)+ #,cex=input$opt.cex)+
+  
+  #scale_shape_identity() + 
+  
+  #geom_count(aes(size = ..prop.., group = 1))
+  #guides(names(legend_choices[legend_choices == input$cat]))))+
+  scale_x_continuous(name="", limits=c(18,35))+
+  scale_y_continuous(name="Latitude", limits=c(58,66)) +
+  #scale_fill_manual("Number of evacuees")
+  theme(axis.text.x = element_text(colour="black",size=10,angle=0,face="plain"),
+        axis.ticks.x = element_line(size = 1),
+        axis.text.y = element_text(colour="grey8",size=10,angle=0,hjust=0,vjust=0,face="plain"), 
+        #legend.position = "none",
+        legend.key.size=unit(0.5,"cm"),
+        legend.text=element_text(size=rel(0.7)),
+        axis.title.x = element_text(colour="grey20",size=11,angle=0,hjust=.5,vjust=0,face="plain"),
+        axis.title.y = element_text(colour="grey20",size=11,angle=90,hjust=.5,vjust=.5,face="plain"))+
+  guides(colour = guide_legend(override.aes = list(size=0.5, alpha = 1)))
+guides(col = guide_legend(override.aes = list(size=1)))
+p37
+
+
+library(ggpubr)
+Fig_1<- ggarrange(p37, p43, p45,ncol=3,nrow=1,vjust=11.5,hjust=-2.0,common.legend = TRUE, legend="right",labels=c("1938", "1943", "1945"))
+
+Fig_1
+
+
+
+#  Posterior predictive check figure
+Fig_1_final <-annotate_figure(Fig_1,
+                              top = text_grob("Evacuee locations before during and after the war", color = "black",
+                                              face = "bold", size = 14),
+                              fig.lab = "Figure 1", fig.lab.face = "bold")
