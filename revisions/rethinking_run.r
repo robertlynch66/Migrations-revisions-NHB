@@ -1,4 +1,5 @@
-# model 8 outbred married after war only
+# Kids model with all interactions
+## Kids all interactions model 31
 library(dplyr)
 library(rethinking)
 # path to the folder with the R data files
@@ -17,6 +18,8 @@ m$fdf_log_pop <- log(m$fdf_population)
 m$fdf_log_pop <- m$fdf_log_pop-min(m$fdf_log_pop, na.rm=TRUE)
 m$fdf_log_pop <- m$fdf_log_pop/max(m$fdf_log_pop, na.rm=TRUE)
 m$age <- 1944- m$birthyear
+m$age <- m$age - min (m$age)
+m$age <- m$age/ max(m$age)
 
 m$census_1950 <- as.factor(m$'1950_census')
 m$technical<- ifelse(m$census_1950==0, 1, 0)
@@ -41,6 +44,11 @@ before <- m %>% filter(married_after==0)
 # married after 1945 for sure
 after <- m %>% filter(married_after==1)
 
+returned_after <- m %>% filter (married_after==1 & returnedkarelia==1)
+remained_after <- m %>% filter (married_after==1 & returnedkarelia==0)
+
+returned_before <- m %>% filter (married_after==0 & returnedkarelia==1)
+remained_before <- m %>% filter (married_after==0 & returnedkarelia==0)
 # put birthplace ids in format for STAN
 m <- m %>% arrange(birthplaceid)
 m$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(m$birthplaceid)) != 0))
@@ -57,62 +65,82 @@ before$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(before$birthplaceid)) != 
 after <- after %>% arrange(birthplaceid)
 after$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(after$birthplaceid)) != 0))
 
-print(nrow(m))
+returned_after <- returned_after %>% arrange(birthplaceid)
+returned_after$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(returned_after$birthplaceid)) != 0))
+
+remained_after <- remained_after %>% arrange(birthplaceid)
+remained_after$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(remained_after$birthplaceid)) != 0))
+
+returned_before <- returned_before %>% arrange(birthplaceid)
+returned_before$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(returned_before$birthplaceid)) != 0))
+
+remained_before <- remained_before %>% arrange(birthplaceid)
+remained_before$birthplace_id_seq <- cumsum(c(1,as.numeric(diff(remained_before$birthplaceid)) != 0))
+
 
 data_list <- list(
-  kids = before$kids,
-  hypergamy = before$hypergamy,
-  outbred = before$outbred,
-  returnedkarelia = before$returnedkarelia,
-  sex = before$sex,
-  education = before$education,
-  agriculture = before$agricult,
-  technical = before$technical,
-  factory = before$factory,
-  service = before$service,
-  office = before$office,
-  business = before$business,
-  transport = before$transport,
-  age = before$age,
-  population = before$log_pop,
-  married_after_war = before$married_after,
-  birthplace_id_seq = before$birthplace_id_seq
+  kids = returned_after$kids,
+  hypergamy = returned_after$hypergamy,
+  outbred = returned_after$outbred,
+  returnedkarelia = returned_after$returnedkarelia,
+  sex = returned_after$sex,
+  education = returned_after$education,
+  agriculture = returned_after$agricult,
+  technical = returned_after$technical,
+  factory = returned_after$factory,
+  service = returned_after$service,
+  office = returned_after$office,
+  business = returned_after$business,
+  transport = returned_after$transport,
+  age = returned_after$age,
+  population = returned_after$log_pop,
+  birthplace_id_seq = returned_after$birthplace_id_seq
 )
-
 model <- map2stan(
   alist(
-    outbred ~ dbinom (1,p),
+    kids ~ dpois (lambda),
     # Here is the model with all the predictors
-    logit(p) <- a + 
-      a_birthplace[birthplace_id_seq] +
+    log(lambda) <- a + a_birthplace[birthplace_id_seq] +
       bhyp * hypergamy +
+      #brk * returnedkarelia +
       bs * sex +
-      bage * age +
-      bpop * population +
-      bed * education +
+      bob *outbred +
+      bed *education +
       bag * agriculture +
-      btech * technical +
+      btech *technical +
       bfact * factory +
-      bserv* service +
+      bserv * service +
       boff * office +
       bbus * business +
       btrans * transport +
-      brk * returnedkarelia,
+      bage * age +
+      bpop * population +
+      #bmaw * married_after +
+      bobs * outbred * sex +
+      bobhyp * outbred * hypergamy +
+      bobage * outbred * age,
+      #bobmaw * outbred * married_after +
+      #bmawrk * married_after * returnedkarelia +
+      #bmawsex * married_after * sex,
+      #brksex *returnedkarelia * sex +
+      #brkage * returnedkarelia*age,
     a_birthplace[birthplace_id_seq] ~ dnorm(0, sigma),
     sigma ~ dcauchy(0,1),
-    
-    #priors for all model intercepts
     a ~ dnorm (0,1),
+    
     # priors for all slopes (b terms) in main model
-    c(bhyp,bs,bage,bpop,bed,bag,btech,bfact,bserv,boff,bbus,btrans,brk) ~ dnorm(0,1)
+    c(bhyp, bob, bs, bed, bag, btech, bfact, bserv, boff, bbus, btrans, bage, bpop,
+      bobs,bobage,bobhyp) ~ dnorm(0,1)
   ),
-  
-  # put in priors for the standard deviations for the missing data
-  data=data_list, iter=8000, warmup=2000, chains=4, cores=4, control=list(max_treedepth=20),
-  start=list(bhyp=0,bs=0,bage=0,bpop=0,bed=0,bag=0,btech=0,bfact=0,bserv=0,boff=0,bbus=0,btrans=0,brk=0))
-
-
+  data=data_list, iter=8000, warmup=2000, control=list(max_treedepth=20),start=list(
+    bhyp=0,  brk=0, bob=0, bs=0, bed=0, bag=0, btech=0, bfact=0, bserv=0, boff=0, bbus=0, btrans=0, 
+    bage=0, bpop=0,  bobage=0,bobhyp=0,
+    bobs=0
+  ),
+  chains=4,cores=4)
 
 path<- (paste0("results/"))
-filename <- "model_8a_outbred_before.rds"
+filename <- "Model_kids_returned_AFTER_w_INTX.rds"
+
 saveRDS(model, paste0(path, filename))
+

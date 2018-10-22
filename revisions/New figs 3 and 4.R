@@ -84,6 +84,9 @@ KA <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models 
 KB <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
 
 
+# load main models
+KALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
+
 attach(before)
 Kretb <- tidyr::crossing(
   # the "L" makes the value an integer, avoiding possible errors

@@ -2097,11 +2097,11 @@ model <- map2stan(
     # priors for all slopes (b terms) in main model
     c(bhyp, bob, brk, bs, bed, bag, btech, bfact, bserv, boff, bbus, btrans, bage, bpop, bmaw,bobage, brkage) ~ dnorm(0,1)
   ),
-  data=data_list, iter=8000, warmup=2000, control=list(max_treedepth=20),start=list(
+  data=data_list, iter=100, warmup=50, control=list(max_treedepth=20),start=list(
     bhyp=0, bob=0, brk=0, bs=0, bed=0, bag=0, btech=0, bfact=0, bserv=0, boff=0, bbus=0, btrans=0, 
     bage=0, bpop=0, bmaw=0, bobage=0, brkage=0
   ),
-  chains=4,cores=4)
+  chains=1,cores=1)
 
 path<- (paste0("results/"))
 filename <- "Model_22_kids_all_top_model.rds"
