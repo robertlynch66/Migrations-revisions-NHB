@@ -66,25 +66,15 @@ library(forcats)
 
 
 # load models
-model_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
-model_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
+#model_before <- readRDS("C:/Users/rofrly/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
+#model_after <- readRDS("C:/Users/rofrly/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
 
-outbred_all <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_30_outbred_all_w_all_interactions.rds")
-kids_all <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_31_kids_all_w_all_interactions.rds")
+outbred_all <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
+
 Model_kids_all <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
 
 
-kids_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
-kids_after <-readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
-  
-inter_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_70_outbred_before_w_intxs.rds")
-inter_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_38_outbred_after_w_all_interactions.rds")
-  
-inter_after_return <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_12_outbred_returned_after.rds")
-inter_after_remain <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_11_outbred_remained_after.rds")
 
-kids_after_remain <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_9_kids_remained_after.rds")
-kids_after_return <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_10_kids_returned_after.rds")
 
 ####################################################################
 ####################################################################
@@ -189,13 +179,14 @@ my_PI <- function(x) {
 }
 #load models 
 #Use models 30 and 31
-model_outbred <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_30_outbred_all_w_all_interactions.rds")
-model_kids <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_31_kids_all_w_all_interactions.rds")
+model_outbred <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
 
-model_kids_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
-model_kids_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
-model_outbred_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_70_outbred_before_w_intxs.rds")
-model_outbred_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_38_outbred_after_w_all_interactions.rds")
+model_kids <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_31_kids_all_w_all_interactions.rds")
+
+model_kids_after <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_61_kids_after_w_intxs.rds")
+model_kids_before <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_60_kids_before_w_intxs.rds")
+model_outbred_before <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_70_outbred_before_w_intxs.rds")
+model_outbred_after <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_38_outbred_after_w_all_interactions.rds")
 
 
 sims_out<- sim(model_outbred)
@@ -240,7 +231,7 @@ df3c$sum <- df3c$V1+df3c$ob
 plyr::count(df3c,'sum')
 
 
-# figure 4a
+# figure S4a
 my_PI <- function(x) {
   return(PI(x, prob=0.89))
 }
@@ -252,7 +243,7 @@ colnames(pi_kids) <- c("obs","low","high")
 pi_kids$count <- ifelse(pi_kids$obs>=pi_kids$low & pi_kids$obs<=pi_kids$high,0,1)
 sum(pi_kids$count)
 
-# figure 4b
+# figure S4b
 pi_kids_before <- apply(sims_kids_before, 2, my_PI) %>% as.data.frame()
 pi_kids_before <- t(pi_kids_before)
 
@@ -261,7 +252,7 @@ colnames(pi_kids_before) <- c("obs","low","high")
 pi_kids_before$count <- ifelse(pi_kids_before$obs>=pi_kids_before$low & pi_kids_before$obs<=pi_kids_before$high,0,1)
 sum(pi_kids_before$count)
 
-# figure 4c
+# figure S4c
 pi_kids_after <- apply(sims_kids_after, 2, my_PI) %>% as.data.frame()
 pi_kids_after <- t(pi_kids_after)
 
@@ -479,9 +470,31 @@ model_6 <- big_data6 %>% ggplot (aes(y= model)) +
         axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
         axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
         axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
-#plot.margin=grid::unit(c(0,0,0,0), "mm"))
+
 model_6
-#ggsave(model_6, filename = "Figure S8.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+### PPC plots
+
+######### panel plots for supp figure S3a-c and S4a-c
+# make panel plots for reproduction before and after war fig 2a 
+panel_plot_s3 <- ggarrange(model_1,model_3,model_5, labels=c("", 
+                                                             ""),
+                           vjust=2.5, hjust= -2,ncol=3, nrow=1, common.legend=TRUE)
+figureS3 <- annotate_figure(panel_plot_s3,
+                            top = text_grob("Posterior predictive checks for models Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
+                            fig.lab = "", fig.lab.face = "bold"
+)
+ggsave(figureS3, filename = "Figure S3a-c.png", width = 12, height = 4, device = "png", dpi = 600,units = "in")
+
+
+panel_plot_s4 <- ggarrange(model_2,model_4,model_6, labels=c("", 
+                                                             ""),
+                           vjust=2.5, hjust= -2,ncol=3, nrow=1, common.legend=TRUE)
+figureS4 <- annotate_figure(panel_plot_s4,
+                            top = text_grob("Posterior predictive checks for models Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
+                            fig.lab = "", fig.lab.face = "bold"
+)
+ggsave(figureS4, filename = "Figure S4a-c.png", width = 16, height = 4, device = "png", dpi = 600,units = "in")
+
 
 
 library ("bayesplot")
@@ -494,13 +507,13 @@ library(gridExtra)
 library(ggplot2)
 
 
-model_outbred <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_30_outbred_all_w_all_interactions.rds")
-model_kids <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_31_kids_all_w_all_interactions.rds")
+#model_outbred <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_30_outbred_all_w_all_interactions.rds")
+#model_kids <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_31_kids_all_w_all_interactions.rds")
 
-model_kids_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
-model_kids_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
-model_outbred_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_70_outbred_before_w_intxs.rds")
-model_outbred_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_38_outbred_after_w_all_interactions.rds")
+#model_kids_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
+#model_kids_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
+#model_outbred_before <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_70_outbred_before_w_intxs.rds")
+#model_outbred_after <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_38_outbred_after_w_all_interactions.rds")
 
 
 
@@ -602,7 +615,7 @@ color_scheme_set("green")
 p2 <- mcmc_intervals(post_model2, prob = 0.5, prob_outer = 0.9,
                      point_est = c("median"), rhat = numeric())
 plot_2<- p2 + 
-  scale_x_continuous(name="Odds ratio",limits=c(-0.35,0.45), labels=c("0.75","1","1.5"),
+  scale_x_continuous(name="Odds ratio",limits=c(-0.45,0.45), labels=c("0.75","1","1.5"),
                      breaks=c(-0.30,0,0.41)) +
   ggplot2::labs(
     title = "Factors affecting\nreproductive outcomes"
@@ -706,10 +719,8 @@ plot_6
 
 
 
-###################Make all final figures - panels etcc.
 library(ggpubr)
-###################################################
-# make a function that puts a gap in the y axis
+
 
 
 
@@ -720,11 +731,11 @@ library(ggpubr)
 panel_plot1 <- ggarrange(plot_3,plot_5, labels=c("", 
                                                  ""),
                          vjust=2.5, hjust= -2,ncol=2, nrow=1, common.legend=FALSE)
-figure2a <-annotate_figure(panel_plot1,
+figureS1 <-annotate_figure(panel_plot1,
                 top = text_grob("Factors affecting Intermarriage", color = "black", face = "bold", size = 14),
                 fig.lab = "", fig.lab.face = "bold"
 )
-ggsave(figure2a , filename = "Figure 2a.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(figure2a , filename = "Figure S1.png", width = 9, height = 7, device = "png", dpi = 600,units = "in")
 
 # make panel plots for reproduction and intermarriage posteriors before and after war fig 2a and 2b
 panel_plot2 <- ggarrange(plot_4,plot_6, labels=c("", 
@@ -734,42 +745,52 @@ figureS2 <- annotate_figure(panel_plot2,
                 top = text_grob("Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
                 fig.lab = "", fig.lab.face = "bold"
 )
-ggsave(figureS2, filename = "Figure S2.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(figureS2, filename = "Figure S2.png", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
 
 
 ### save figures 2a and 2b
-ggsave(plot_1, filename = "Figure 2a.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(plot_1, filename = "Figure 2a.png", width = 9, height = 7, device = "png", dpi = 600,units = "in")
 
-ggsave(plot_2, filename = "Figure 2b.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
-
-
-### PPC plots
-
-######### panel plots for supp figure S3a-c and S4a-c
-# make panel plots for reproduction before and after war fig 2a 
-panel_plot_s3 <- ggarrange(model_1,model_3,model_5, labels=c("", 
-                                                             ""),
-                           vjust=2.5, hjust= -2,ncol=3, nrow=1, common.legend=TRUE)
-figureS3 <- annotate_figure(panel_plot_s3,
-                            top = text_grob("Posterior predictive checks for models Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
-                            fig.lab = "", fig.lab.face = "bold"
-)
-ggsave(figureS3, filename = "Figure S3a-c.jpeg", width = 16, height = 4, device = "jpeg", dpi = 600,units = "in")
+ggsave(plot_2, filename = "Figure 2b.png", width = 9, height = 7, device = "png", dpi = 600,units = "in")
 
 
-panel_plot_s4 <- ggarrange(model_2,model_4,model_6, labels=c("", 
-                                                             ""),
-                           vjust=2.5, hjust= -2,ncol=3, nrow=1, common.legend=TRUE)
-figureS4 <- annotate_figure(panel_plot_s4,
-                            top = text_grob("Posterior predictive checks for models Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
-                            fig.lab = "", fig.lab.face = "bold"
-)
-ggsave(figureS4, filename = "Figure S4a-c.jpeg", width = 12, height = 4, device = "jpeg", dpi = 600,units = "in")
 
 library(ggplot2)
 
 
 ## Figure S5 (age histogram)
+## person_data <- readRDS("C:/Users/rofrly/Dropbox/Github/data files/person_data.rds")
+m<- person_data
+m <- m %>% filter(birthregion == "karelia" & birthyear<1926 & birthyear>1870)
+m$hypergamy <- m$social_class-m$social_class_spouse
+m$hypergamy <- ifelse(m$hypergamy<0,-1, ifelse(m$hypergamy>0, 1,0))
+
+m$married_after <- ifelse(m$weddingyear<1945 | is.na(m$weddingyear), 0, 1)
+m$log_pop <- log(m$birthpopulation)
+m$log_pop <- m$log_pop-min(m$log_pop, na.rm=TRUE)
+m$log_pop <- m$log_pop / max(m$log_pop, na.rm=TRUE)
+m$fdf_log_pop <- log(m$fdf_population)
+m$fdf_log_pop <- m$fdf_log_pop-min(m$fdf_log_pop, na.rm=TRUE)
+m$fdf_log_pop <- m$fdf_log_pop/max(m$fdf_log_pop, na.rm=TRUE)
+m$age <- 1944- m$birthyear
+m$age_1940 <- 1940-m$birthyear
+m$age <- m$age - min (m$age)
+m$age <- m$age/ max(m$age)
+m$census_1950 <- as.factor(m$'1950_census')
+m$technical<- ifelse(m$census_1950==0, 1, 0)
+m$office<- ifelse(m$census_1950==1, 1, 0)
+m$business<- ifelse(m$census_1950==2, 1, 0)
+m$agricult<- ifelse(m$census_1950==3, 1, 0)
+m$transport<- ifelse(m$census_1950==5, 1, 0)
+m$factory<- ifelse(m$census_1950==6, 1, 0)
+m$service<- ifelse(m$census_1950==8, 1, 0)
+
+
+
+
+m<- m %>% dplyr::select(kids,hypergamy,outbred,returnedkarelia,sex, age,log_pop, education, agricult, technical,factory,service,
+                        office,business,transport, birthplaceid,married_after,age_1940, birthyear)
+m <- m[complete.cases(m),] # N=26,757
 age_dist <-ggplot(data=m, aes(age_1940)) + 
   geom_histogram(breaks=seq(15, 69, by = 1), 
                  color="red", 
@@ -795,7 +816,7 @@ age_dist <-ggplot(data=m, aes(age_1940)) +
 
 age_dist
 
-ggsave(age_dist, filename = "Figure S5.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(age_dist, filename = "Figure S5.png", width = 9, height = 7, device = "png", dpi = 600,units = "in")
 
 
 
@@ -883,108 +904,6 @@ library(modelr)
 library(forcats)
 
 
-# load models from table s4
-OBRT <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_51_outbred_before_returned_no_intxs.rds")
-OBRM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_43_outbred_before_remained_no_intxs.rds")
-OART <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_12_outbred_returned_after.rds")
-OARM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_11_outbred_remained_after.rds")
-KBRT <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_50_kids_before_returned_no_intxs.rds")
-KBRM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_42_kids_before_remained_no_intxs.rds")
-KART <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_10_kids_returned_after.rds")
-KARM <-readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_9_kids_remained_after.rds")
-
-## before and after models- table s2
-KA <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
-KB <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
-
-
-# load main models
-KALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
-
-#load packages
-library(dplyr)
-library(rethinking)
-library(tidybayes)
-library(bayesplot)
-library(tidybayes.rethinking)
-library(data.table)
-library(colortools)
-library(ggpubr)
-person_data <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/person_data.rds")
-m<- person_data
-m <- m %>% filter(birthregion == "karelia" & birthyear<1926 & birthyear>1870)
-m$hypergamy <- m$social_class-m$social_class_spouse
-m$hypergamy <- ifelse(m$hypergamy<0,-1, ifelse(m$hypergamy>0, 1,0))
-
-m$married_after <- ifelse(m$weddingyear<1945 | is.na(m$weddingyear), 0, 1)
-m$log_pop <- log(m$birthpopulation)
-m$log_pop <- m$log_pop-min(m$log_pop, na.rm=TRUE)
-m$log_pop <- m$log_pop / max(m$log_pop, na.rm=TRUE)
-m$fdf_log_pop <- log(m$fdf_population)
-m$fdf_log_pop <- m$fdf_log_pop-min(m$fdf_log_pop, na.rm=TRUE)
-m$fdf_log_pop <- m$fdf_log_pop/max(m$fdf_log_pop, na.rm=TRUE)
-m$age <- 1944- m$birthyear
-m$age_1940 <- 1940-m$birthyear
-m$age <- m$age - min (m$age)
-m$age <- m$age/ max(m$age)
-m$census_1950 <- as.factor(m$'1950_census')
-m$technical<- ifelse(m$census_1950==0, 1, 0)
-m$office<- ifelse(m$census_1950==1, 1, 0)
-m$business<- ifelse(m$census_1950==2, 1, 0)
-m$agricult<- ifelse(m$census_1950==3, 1, 0)
-m$transport<- ifelse(m$census_1950==5, 1, 0)
-m$factory<- ifelse(m$census_1950==6, 1, 0)
-m$service<- ifelse(m$census_1950==8, 1, 0)
-
-
-
-
-m<- m %>% dplyr::select(kids,hypergamy,outbred,returnedkarelia,sex, age,log_pop, education, agricult, technical,factory,service,
-                        office,business,transport, birthplaceid,married_after,age_1940)
-m <- m[complete.cases(m),] # N=26,757
-
-# split data into returned and remained groups and before and after war
-# Returned == 1
-returned <- m %>% filter(returnedkarelia==1)
-remained <- m %>% filter(returnedkarelia==0)
-#married before 1945 or unknown
-before <- m %>% filter(married_after==0)
-# married after 1945 for sure
-after <- m %>% filter(married_after==1)
-
-
-retb<- m%>% filter(returnedkarelia==1 & married_after==0)
-remb <- m%>% filter(returnedkarelia==0 & married_after==0)
-
-reta<- m%>% filter(returnedkarelia==1 & married_after==1)
-rema <- m%>% filter(returnedkarelia==0 & married_after==1)
-# load graphics packages
-library(magrittr)
-library(dplyr)
-library(ggplot2)
-library(ggstance)
-library(rstan)
-library(tidybayes)
-library(emmeans)
-library(broom)
-library(brms)
-library(modelr)
-library(forcats)
-
-
-# load models from table s4
-OBRT <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_51_outbred_before_returned_no_intxs.rds")
-OBRM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_43_outbred_before_remained_no_intxs.rds")
-OART <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_12_outbred_returned_after.rds")
-OARM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_11_outbred_remained_after.rds")
-KBRT <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_50_kids_before_returned_no_intxs.rds")
-KBRM <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_42_kids_before_remained_no_intxs.rds")
-KART <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_10_kids_returned_after.rds")
-KARM <-readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/Model_9_kids_remained_after.rds")
-
-## before and after models- table s2
-KA <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
-KB <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
 
 
 # load main models
@@ -1048,14 +967,14 @@ data <- data[which(data$lambda >min(int_2) & data$lambda < max(int_2)), ]
 
 
 k1 <- ggplot(data = data, aes(x = factor(outbred), y = lambda)) +
-  geom_violin(position = dodge, fill="#4682B4",alpha=0.66)+
-  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,color="black",position=dodge,aes(x=factor(outbred),
+  geom_violin(position = "dodge", fill="#4682B4",alpha=0.66)+
+  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred",position="dodge") +
+  geom_errorbar(size=0.6,width=0.3,color="black",position="dodge",aes(x=factor(outbred),
                                                                   #fill=factor(returnedkarelia),
                                                                   
                                                                   ymin=(mean_kids-se_kids),
                                                                   ymax=(mean_kids+se_kids))) +
-  geom_point(alpha=1,size=2, aes(x = factor(outbred), y = mean_kids)) +
+  geom_point(alpha=1,size=1, aes(x = factor(outbred), y = mean_kids)) +
   scale_shape_identity()
 
 
@@ -1076,11 +995,11 @@ k1 <- k1 +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1147,14 +1066,14 @@ data2 <- data2[which(data2$lambda >min(int_2) & data2$lambda < max(int_2)), ]
 
 
 k2 <- ggplot(data = data2, aes(x = factor(outbred), y = lambda)) +
-  geom_violin(position = dodge, fill="#B47846",alpha=0.66)+
-  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,color="black",position=dodge,aes(x=factor(outbred),
+  geom_violin(position = "dodge", fill="#B47846",alpha=0.66)+
+  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred",position = "dodge") +
+  geom_errorbar(size=0.6,width=0.3,color="black",position="dodge",aes(x=factor(outbred),
                                                                   #fill=factor(returnedkarelia),
                                                                   
                                                                   ymin=(mean_kids-se_kids),
                                                                   ymax=(mean_kids+se_kids))) +
-  geom_point(alpha=1,size=2, aes(x = factor(outbred), y = mean_kids)) +
+  geom_point(alpha=1,size=1, aes(x = factor(outbred), y = mean_kids)) +
   scale_shape_identity()
 
 
@@ -1175,11 +1094,11 @@ k2 <- k2 +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1245,14 +1164,14 @@ data3 <- data3[which(data3$lambda >min(int_2) & data3$lambda < max(int_2)), ]
 
 
 k3 <- ggplot(data = data3, aes(x = factor(outbred), y = lambda)) +
-  geom_violin(position = dodge, fill="#4682B4",alpha=0.66)+
-  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,color="black",position=dodge,aes(x=factor(outbred),
+  geom_violin(position = "dodge", fill="#4682B4",alpha=0.66)+
+  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred",position = "dodge") +
+  geom_errorbar(size=0.6,width=0.3,color="black",position="dodge",aes(x=factor(outbred),
                                                                   #fill=factor(returnedkarelia),
                                                                   
                                                                   ymin=(mean_kids-se_kids),
                                                                   ymax=(mean_kids+se_kids))) +
-  geom_point(alpha=1,size=2, aes(x = factor(outbred), y = mean_kids)) +
+  geom_point(alpha=1,size=1, aes(x = factor(outbred), y = mean_kids)) +
   scale_shape_identity()
 
 
@@ -1273,11 +1192,11 @@ k3 <- k3 +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1347,14 +1266,14 @@ data4 <- data4[which(data4$lambda >min(int_2) & data4$lambda < max(int_2)), ]
 
 
 k4 <- ggplot(data = data4, aes(x = factor(outbred), y = newlambda)) +
-  geom_violin(position = dodge, fill="#B47846",alpha=0.66)+
-  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,color="black",position=dodge,aes(x=factor(outbred),
+  geom_violin(position = "dodge", fill="#B47846",alpha=0.66)+
+  geom_boxplot(width=.1,fill='#A4A4A4', col="darkred",position = "dodge") +
+  geom_errorbar(size=0.6,width=0.3,color="black",position="dodge",aes(x=factor(outbred),
                                                                   #fill=factor(returnedkarelia),
                                                                   
                                                                   ymin=(mean_kids-se_kids),
                                                                   ymax=(mean_kids+se_kids))) +
-  geom_point(alpha=1,size=2, aes(x = factor(outbred), y = mean_kids)) +
+  geom_point(alpha=1,size=1, aes(x = factor(outbred), y = mean_kids)) +
   scale_shape_identity()
 
 
@@ -1375,11 +1294,11 @@ k4 <- k4 +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1392,26 +1311,23 @@ figure4a <- ggarrange(k1,k2, labels=c("",
                                       ""),
                       vjust=2.5, hjust= -2,ncol=2, nrow=1, common.legend=TRUE)
 figure4a <- annotate_figure(figure4a,
-                            top = text_grob("MARRIED BEFORE THE WAR", color = "black", face = "bold", size = 14),
+                            top = text_grob("MARRIED BEFORE THE WAR", color = "black", face = "bold", size = 8),
                             fig.lab = "", fig.lab.face = "bold"
 )
 figure4b <- ggarrange(k3,k4, labels=c("", 
                                       ""),
                       vjust=2.5, hjust= -2,ncol=2, nrow=1, common.legend=TRUE)
 figure4b <- annotate_figure(figure4b,
-                            top = text_grob("MARRIED AFTER THE WAR", color = "black", face = "bold", size = 14),
+                            top = text_grob("MARRIED AFTER THE WAR", color = "black", face = "bold", size = 8),
                             fig.lab = "", fig.lab.face = "bold"
 )
 figure4 <- ggarrange(figure4a,figure4b, nrow=2)
 
 
-ggsave(figure4, filename = "Figure 4a-4b_new.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(figure4, filename = "Figure 4a-4b_new.png", width = 4, height = 4, device = "png", dpi = 600,units = "in")
 
 ## Fig 3####################################
 
-#Read in models
-OB <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_70_outbred_before_w_intxs.rds")
-OA <- readRDS("C:/Users/robert/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_38_outbred_after_w_all_interactions.rds")
 # full model
 MALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
 
@@ -1476,13 +1392,13 @@ scaleFUN <- function(x) sprintf("%.2f", x)
 
 
 
-k5 <- ggplot(data = data5, aes(x = factor(hypergamy), y = p)) +
+k5 <- ggplot(data = data5, aes(x = factor(hypergamy), y = p, position="dodge")) +
   geom_violin( fill="#4682B4",alpha=0.66)+
   geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,aes(x=factor(hypergamy),
+  geom_errorbar(size=0.6,width=0.3,aes(x=factor(hypergamy),
                                      ymin=(mean_out-se_out),
                                      ymax=(mean_out+se_out))) +
-  geom_point(alpha=1,size=2, position=dodge,aes(x = factor(hypergamy), y = mean_out)) +
+  geom_point(alpha=1,size=1,aes(x = factor(hypergamy), y = mean_out)) +
   scale_shape_identity()
 
 
@@ -1501,11 +1417,11 @@ k5 <- k5 + scale_x_discrete(breaks=c("-1","1"),limits = c("-1","skip","1"),label
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1574,13 +1490,13 @@ scaleFUN <- function(x) sprintf("%.2f", x)
 
 
 
-k6 <- ggplot(data = data6, aes(x = factor(hypergamy), y = p)) +
+k6 <- ggplot(data = data6, aes(x = factor(hypergamy), y = p, position="dodge")) +
   geom_violin( fill="#B47846",alpha=0.66)+
   geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,aes(x=factor(hypergamy),
+  geom_errorbar(size=0.6,width=0.3,aes(x=factor(hypergamy),
                                      ymin=(mean_out-se_out),
                                      ymax=(mean_out+se_out))) +
-  geom_point(alpha=1,size=2, position=dodge,aes(x = factor(hypergamy), y = mean_out)) +
+  geom_point(alpha=1,size=1,aes(x = factor(hypergamy), y = mean_out)) +
   scale_shape_identity()
 
 
@@ -1599,11 +1515,11 @@ k6 <- k6 + scale_x_discrete(breaks=c("-1","1"),limits = c("-1","skip","1"),label
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1674,13 +1590,13 @@ scaleFUN <- function(x) sprintf("%.2f", x)
 
 
 
-k7 <- ggplot(data = data7, aes(x = factor(hypergamy), y = p)) +
+k7 <- ggplot(data = data7, aes(x = factor(hypergamy), y = p, position="dodge")) +
   geom_violin( fill="#4682B4",alpha=0.66)+
   geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,aes(x=factor(hypergamy),
+  geom_errorbar(size=0.6,width=0.3,aes(x=factor(hypergamy),
                                      ymin=(mean_out-se_out),
                                      ymax=(mean_out+se_out))) +
-  geom_point(alpha=1,size=2, position=dodge,aes(x = factor(hypergamy), y = mean_out)) +
+  geom_point(alpha=1,size=1, aes(x = factor(hypergamy), y = mean_out)) +
   scale_shape_identity()
 
 
@@ -1699,11 +1615,11 @@ k7 <- k7 + scale_x_discrete(breaks=c("-1","1"),limits = c("-1","skip","1"),label
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1773,13 +1689,13 @@ scaleFUN <- function(x) sprintf("%.2f", x)
 
 
 
-k8 <- ggplot(data = data8, aes(x = factor(hypergamy), y = newp)) +
+k8 <- ggplot(data = data8, aes(x = factor(hypergamy), y = newp, position="dodge")) +
   geom_violin( fill="#B47846",alpha=0.66)+
   geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
-  geom_errorbar(size=1,width=0.3,aes(x=factor(hypergamy),
+  geom_errorbar(size=0.6,width=0.3,aes(x=factor(hypergamy),
                                      ymin=(mean_out-se_out),
                                      ymax=(mean_out+se_out))) +
-  geom_point(alpha=1,size=2, position=dodge,aes(x = factor(hypergamy), y = mean_out)) +
+  geom_point(alpha=1,size=1,aes(x = factor(hypergamy), y = mean_out)) +
   scale_shape_identity()
 
 
@@ -1797,11 +1713,11 @@ k8 <- k8 + scale_x_discrete(breaks=c("-1","1"),limits = c("-1","skip","1"),label
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=7,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=5,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=5,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=6,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=6,angle=90,hjust=.5,vjust=.5,face="bold"))  
 
 
 
@@ -1813,21 +1729,81 @@ figure3a <- ggarrange(k5,k6, labels=c("",
                                       ""),
                       vjust=2.5, hjust= -2,ncol=2, nrow=1, common.legend=TRUE)
 figure3a <- annotate_figure(figure3a,
-                            top = text_grob("MARRIED BEFORE THE WAR", color = "black", face = "bold", size = 14),
+                            top = text_grob("MARRIED BEFORE THE WAR", color = "black", face = "bold", size = 8),
                             fig.lab = "", fig.lab.face = "bold"
 )
 figure3b <- ggarrange(k7,k8, labels=c("", 
                                       ""),
                       vjust=2.5, hjust= -2,ncol=2, nrow=1, common.legend=TRUE)
 figure3b <- annotate_figure(figure3b,
-                            top = text_grob("MARRIED AFTER THE WAR", color = "black", face = "bold", size = 14),
+                            top = text_grob("MARRIED AFTER THE WAR", color = "black", face = "bold", size = 8),
                             fig.lab = "", fig.lab.face = "bold"
 )
 figure3 <- ggarrange(figure3a,figure3b, nrow=2)
 
 
-ggsave(figure3, filename = "Figure 3a-b_new.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(figure3, filename = "Figure 3a-b.png", width = 4, height = 4, device = "png", dpi = 600,units = "in")
 
+
+
+##### Model predictions
+# Intermarriage full model
+attach(m)
+oarm <- tidyr::crossing(
+  returnedkarelia = mean(returnedkarelia), # the "L" makes the value an integer, avoiding possible errors
+  #outbred = c(0L,1L),
+  birthplace_id_seq = 1,
+  sex = mean(sex),
+  age = mean(age),
+  married_after =1L,
+  hypergamy = mean(hypergamy),
+  population = mean(log_pop),
+  education=1L,
+  agriculture = mean(agricult),
+  technical = mean(technical),
+  transport = mean(transport),
+  factory = mean(factory),
+  office = mean(office),
+  service = mean(service),
+  business = mean(business)) %>%
+  as.data.frame()
+detach(m)
+library(tidybayes.rethinking)
+
+df_rm_after <- tidy_link(oarm, MALL) %>% as.data.frame()
+
+mean(df_rm_after$p)
+std <- function(x) sd(x)/sqrt(length(x))
+hdi(df_rm_after$p)
+
+### get predictions for reproduction model main
+attach(m)
+Krema <- tidyr::crossing(
+  # the "L" makes the value an integer, avoiding possible errors
+  outbred = 0L,
+  birthplace_id_seq = 1,
+  sex = mean(sex),
+  age = mean(age),
+  returnedkarelia =0L,
+  married_after =1L,
+  hypergamy = mean(hypergamy),
+  population = mean(log_pop),
+  education=mean(education),
+  agriculture = mean(agricult),
+  technical = mean(technical),
+  transport = mean(transport),
+  factory = mean(factory),
+  office = mean(office),
+  service = mean(service),
+  business = mean(business)) %>%
+  as.data.frame()
+detach(m)
+library(tidybayes.rethinking)
+
+df_karm <- tidy_link(Krema, KALL) %>% as.data.frame()
+mean(df_karm$lambda)
+std <- function(x) sd(x)/sqrt(length(x))
+hdi(df_karm$lambda)
 
 
 ##### Model predictions
@@ -1894,7 +1870,8 @@ hdi(df_karm$lambda)
 library(ggplot2)
 library(ggmap)
 library(dplyr)
-locate <- readRDS("locate.rds")
+
+locate <- readRDS("C:/Users/rofrly/Dropbox/Github/data files/locate.rds")
 # filter data for 1937, 1943 and 1947
 locate_1937<- locate %>% filter (years==1930 & lat.x<62.2 & lon.x !=27.52 & lon.x!=28.01) %>% as.data.frame()
 locate_1943<- locate %>% filter (years==1943 ) %>% as.data.frame()
@@ -1930,7 +1907,7 @@ Fig_1
 
 
 
-#  Posterior predictive check figure
+#  maps
 Fig_1_final <-annotate_figure(Fig_1,
                               top = text_grob("Evacuee locations before during and after the war", color = "black",
                                               face = "bold", size = 14),
