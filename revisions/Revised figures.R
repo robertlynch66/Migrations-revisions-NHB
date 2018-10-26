@@ -16,10 +16,18 @@ locate_1945<- locate %>% filter (years==1945 & location2 !=301 ) %>% as.data.fra
 # this is the patch - make sure this installs properly!!!
 devtools::install_github("dkahle/ggmap", ref = "tidyup")
 
+# privatize api key - put in git ignore file for github
+filename <- "C:/Users/robert/Dropbox/Github/Migration revisions for NHB/revisions/api_key.txt"
+my_api <- readChar(filename, file.info(filename)$size)
+my_api <- gsub("\r\n","",my_api)
+
+
 library(ggmap)
-# run this line to authienticate google srevices with my api code from google cloud platform - this
+# run this line to authenticate google services with my api code from google cloud platform - this
 # is where I find my api key
-register_google(key = "AIzaSyDHZK48zah4BizELuH_08kynwoNHHzk2Jc")
+
+
+register_google(key = my_api)
 
 
 al1 = get_map(location = c(lon = 28 , lat = 61), zoom = 5, scale = 2, maptype = "terrain", source="google")

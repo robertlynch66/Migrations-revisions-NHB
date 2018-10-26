@@ -5,7 +5,7 @@
 # History files
 .Rhistory
 .Rapp.history
-
+api_key.txt
 # Session Data files
 .RData
 
