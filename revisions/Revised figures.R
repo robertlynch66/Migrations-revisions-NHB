@@ -110,7 +110,7 @@ Fig_1_final <-annotate_figure(Fig_1,top = text_grob("Evacuee locations before du
 
 Fig_1_final
 
-ggsave(Fig_1_final, filename = "Figure 1a-c.png", width = 6, height = 2, device = "png", dpi = 600,units = "in")
+ggsave(Fig_1_final, filename = "Figure 1a-c.pdf", width = 6, height = 2, device = "pdf", units = "in")
 
 #load packages
 library(dplyr)
@@ -121,6 +121,7 @@ library(tidybayes.rethinking)
 library(data.table)
 library(colortools)
 person_data <- readRDS("C:/Users/rofrly/Dropbox/Github/data files/person_data.rds")
+person_data <- readRDS ("../../data files/person_data_old.rds")
 m<- person_data
 m <- m %>% filter(birthregion == "karelia" & birthyear<1926 & birthyear>1870)
 m$hypergamy <- m$social_class-m$social_class_spouse
@@ -182,9 +183,9 @@ library(forcats)
 #model_before <- readRDS("C:/Users/rofrly/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_60_kids_before_w_intxs.rds")
 #model_after <- readRDS("C:/Users/rofrly/Dropbox/Github/Migration_ms_NHB/revisions/Models for NHB revision/Final models for revision/model_61_kids_after_w_intxs.rds")
 
-outbred_all <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
+outbred_all <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
 
-Model_kids_all <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
+Model_kids_all <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
 
 
 
@@ -210,7 +211,7 @@ library(bayesplot)
 
 # Load old data
 ## read in df that matches models  KEY PART
-person_data_old <- readRDS("C:/Users/rofrly/Dropbox/Github/data files/person_data_old.rds")
+person_data_old <- readRDS("../data files/person_data_old.rds")
 
 
 m <- person_data_old
@@ -292,14 +293,15 @@ my_PI <- function(x) {
 }
 #load models 
 #Use models 30 and 31
-model_outbred <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
+# realtive paths to model results
+model_outbred <- readRDS("../../Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
 
-model_kids <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_31_kids_all_w_all_interactions.rds")
+model_kids <- readRDS("../../Migrations paper/Models for NHB revision/Model_31_kids_all_w_all_interactions.rds")
 
-model_kids_after <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_61_kids_after_w_intxs.rds")
-model_kids_before <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_60_kids_before_w_intxs.rds")
-model_outbred_before <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_70_outbred_before_w_intxs.rds")
-model_outbred_after <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_38_outbred_after_w_all_interactions.rds")
+model_kids_after <- readRDS("../../Migrations paper/Models for NHB revision/model_61_kids_after_w_intxs.rds")
+model_kids_before <- readRDS("../../Migrations paper/Models for NHB revision/model_60_kids_before_w_intxs.rds")
+model_outbred_before <- readRDS("../../Migrations paper/Models for NHB revision/model_70_outbred_before_w_intxs.rds")
+model_outbred_after <- readRDS("../../Migrations paper/Models for NHB revision/model_38_outbred_after_w_all_interactions.rds")
 
 
 sims_out<- sim(model_outbred)
@@ -403,7 +405,7 @@ library(plotrix)
 model_1 <- big_data1 %>% ggplot (aes(y= model)) +
   stat_intervalh(aes(x=predicted), .width = c(.5,.8,.95),show.legend = NA) +
   scale_color_brewer(palette = "Greens",name="Posterior prediction\nintervals") +
-  geom_vline(xintercept=c(-0.1,1.1), linetype="dotted") +
+  geom_vline(xintercept=c(-0.05,1.0), linetype="dotted") +
   geom_vline(xintercept=mean(big_data1$observed), linetype="F1") +
   
   geom_segment(aes(x=mean(observed)-(std.error(observed)*15), xend=mean(observed)+(std.error(observed)*15),y=1,yend=1,
@@ -413,7 +415,7 @@ model_1 <- big_data1 %>% ggplot (aes(y= model)) +
   
   geom_point(aes(x=mean(observed), y=1.0), colour="black",size=2,position=position_nudge(y=0.05))+
   
-  scale_x_discrete(name="",limits=c(-0.05,mean(big_data1$observed),1.1), labels=c("Married a\nKarelian","Mean\nobservation",
+  scale_x_discrete(name="",limits=c(-0.05,mean(big_data1$observed),1.0), labels=c("Married a\nKarelian","Mean\nobservation",
                                                                   "Married a\nresident Finn"))+
   scale_y_discrete(name="",limits=c(1),breaks=c("1"),
                    labels=c("Factors affecting\n the probability\nof intermarriage"))+ 
@@ -423,11 +425,11 @@ model_1 <- big_data1 %>% ggplot (aes(y= model)) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=12,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=8,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=8,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=10,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=10,angle=90,hjust=.5,vjust=.5,face="bold"))  
 model_1
 
 #ggsave(model_1, filename = "Figure S3.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
@@ -465,7 +467,7 @@ model_2
 model_3 <- big_data3 %>% ggplot (aes(y= model)) +
   stat_intervalh(aes(x=predicted,y=1), .width = c(.5,.8,.95),show.legend = NA) +
   scale_color_brewer(palette = "Greens",name="Posterior prediction\nintervals") +
-  geom_vline(xintercept=c(0.1,1.1), linetype="dotted") +
+  geom_vline(xintercept=c(-0.05,1.0), linetype="dotted") +
   geom_vline(xintercept=mean(big_data3$observed), linetype="F1") +
   geom_segment(aes(x=mean(observed)-(std.error(observed)*15), xend=mean(observed)+(std.error(observed)*15),y=1,yend=1,
                    linetype='Observed data\n 99% CI'), 
@@ -474,7 +476,7 @@ model_3 <- big_data3 %>% ggplot (aes(y= model)) +
   
   geom_point(aes(x=mean(observed), y=1.0), colour="black",size=2,position=position_nudge(y=0.05))+
   
-  scale_x_discrete(name="",limits=c(-0.05,mean(big_data3$observed),1.1), 
+  scale_x_discrete(name="",limits=c(-0.05,mean(big_data3$observed),1.0), 
                    labels=c("Married a\nKarelian","Mean\nobservation","Married a\nresident Finn"))+
   scale_y_discrete(name="",limits=c(1),breaks=c("1"),
                    labels=c(""))+ 
@@ -485,11 +487,11 @@ model_3 <- big_data3 %>% ggplot (aes(y= model)) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=12,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=8,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=8,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=10,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=10,angle=90,hjust=.5,vjust=.5,face="bold"))  
 model_3
 #ggsave(model_3, filename = "Figure S5.tiff", width = 9, height = 7, device = "tiff", dpi = 600,units = "in")
 model_4 <- big_data4 %>% ggplot (aes(y= model)) +
@@ -527,7 +529,7 @@ model_4
 model_5 <- big_data5 %>% ggplot (aes(y= model)) +
   stat_intervalh(aes(x=predicted,y=1), .width = c(.5,.8,.95),show.legend = NA) +
   scale_color_brewer(palette = "Greens",name="Posterior prediction\nintervals") +
-  geom_vline(xintercept=c(-0.05,1.1), linetype="dotted") +
+  geom_vline(xintercept=c(-0.00,1.05), linetype="dotted") +
   geom_vline(xintercept=mean(big_data5$observed), linetype="F1") +
   
   geom_segment(aes(x=mean(observed)-(std.error(observed)*15), xend=mean(observed)+(std.error(observed)*15),y=1,yend=1,
@@ -537,7 +539,7 @@ model_5 <- big_data5 %>% ggplot (aes(y= model)) +
   
   geom_point(aes(x=mean(observed), y=1.0), colour="black",size=2,position=position_nudge(y=0.05))+
   
-  scale_x_discrete(name="",limits=c(-0.05,mean(big_data5$observed),1.1), 
+  scale_x_discrete(name="",limits=c(-0.00,mean(big_data5$observed),1.05), 
                    labels=c("Married a\nKarelian","Mean\nobservation","Married a\nresident Finn"))+
   scale_y_discrete(name="",limits=c(1),breaks=c("1"),
                    labels=c(""))+ 
@@ -548,11 +550,11 @@ model_5 <- big_data5 %>% ggplot (aes(y= model)) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.key.size = unit(0.5, "in")) +
-  theme(plot.title = element_text(hjust = 0.5, size=14,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10,angle=0,face="bold"),
-        axis.text.y = element_text(colour="grey20",size=10,angle=0,hjust=0,vjust=0,face="bold"),  
-        axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-        axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=.5,face="bold"))  
+  theme(plot.title = element_text(hjust = 0.5, size=12,face="bold"),
+        axis.text.x = element_text(colour="grey20",size=8,angle=0,face="bold"),
+        axis.text.y = element_text(colour="grey20",size=8,angle=0,hjust=0,vjust=0,face="bold"),  
+        axis.title.x = element_text(colour="black",size=10,angle=0,hjust=.5,vjust=0,face="bold"),
+        axis.title.y = element_text(colour="black",size=10,angle=90,hjust=.5,vjust=.5,face="bold"))  
 model_5
 #ggsave(model_5, filename = "Figure S7.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
 model_6 <- big_data6 %>% ggplot (aes(y= model)) +
@@ -586,17 +588,17 @@ model_6 <- big_data6 %>% ggplot (aes(y= model)) +
 
 model_6
 ### PPC plots
-
+library(ggpubr)
 ######### panel plots for supp figure S3a-c and S4a-c
 # make panel plots for reproduction before and after war fig 2a 
 panel_plot_s3 <- ggarrange(model_1,model_3,model_5, labels=c("", 
                                                              ""),
                            vjust=2.5, hjust= -2,ncol=3, nrow=1, common.legend=TRUE)
 figureS3 <- annotate_figure(panel_plot_s3,
-                            top = text_grob("Posterior predictive checks for models Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
+                            top = text_grob("Posterior predictive checks for models Factors affecting Intermarriage", color = "black", face = "bold", size = 14),
                             fig.lab = "", fig.lab.face = "bold"
 )
-ggsave(figureS3, filename = "Figure S3a-c.png", width = 12, height = 4, device = "png", dpi = 600,units = "in")
+ggsave(figureS3, filename = "Figure S3a-c.pdf", width = 14, height = 4, device = "pdf", dpi = 600,units = "in")
 
 
 panel_plot_s4 <- ggarrange(model_2,model_4,model_6, labels=c("", 
@@ -606,7 +608,7 @@ figureS4 <- annotate_figure(panel_plot_s4,
                             top = text_grob("Posterior predictive checks for models Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
                             fig.lab = "", fig.lab.face = "bold"
 )
-ggsave(figureS4, filename = "Figure S4a-c.png", width = 16, height = 4, device = "png", dpi = 600,units = "in")
+ggsave(figureS4, filename = "Figure S4a-c.pdf", width = 16, height = 4, device = "pdf", dpi = 600,units = "in")
 
 
 
@@ -633,8 +635,8 @@ library(ggplot2)
 # read in kids before and after with all intxs for figure S2
 # 
 # ##########################################################
-kids_before_all_intxs <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_before_FULL_INTS.rds")
-kids_after_all_intxs <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_after_FULL_INTS.rds")
+kids_before_all_intxs <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/Model_kids_before_FULL_INTS.rds")
+kids_after_all_intxs <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/Model_kids_after_FULL_INTS.rds")
 
 
 
@@ -655,7 +657,7 @@ names(post_model1) <- c(labels=c("Male","Age","Hypergamy","Returned to Karelia",
 
 
 # read in full kids model with all intxs for figure 2b
-Kids_all_all_intxs <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
+Kids_all_all_intxs <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
 
 post_model2 <- extract.samples(Kids_all_all_intxs) %>% as.data.frame()
 post_model2 <- post_model2 %>% select (1:23)
@@ -745,6 +747,13 @@ plot_2
 ggsave(plot_2, filename = "Figure 2b.jpeg", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
 
 
+## make figures 2a-2b panel plots in a single file
+library(ggpubr)
+figure2 <- ggarrange(plot_1,plot_2, labels=c("", 
+                                                 ""),
+                         vjust=2.5, hjust= -2,ncol=2, nrow=1, common.legend=FALSE)
+
+ggsave(figure2 , filename = "Figure 2.pdf", width = 9, height = 7, device = "pdf", dpi = 600,units = "in")
 
 # main figure panel plots
 color_scheme_set("purple")
@@ -848,7 +857,7 @@ figureS1 <-annotate_figure(panel_plot1,
                 top = text_grob("Factors affecting Intermarriage", color = "black", face = "bold", size = 14),
                 fig.lab = "", fig.lab.face = "bold"
 )
-ggsave(figure2a , filename = "Figure S1.png", width = 9, height = 7, device = "png", dpi = 600,units = "in")
+ggsave(figureS1 , filename = "Figure S1.pdf", width = 9, height = 7, device = "pdf", dpi = 600,units = "in")
 
 # make panel plots for reproduction and intermarriage posteriors before and after war fig 2a and 2b
 panel_plot2 <- ggarrange(plot_4,plot_6, labels=c("", 
@@ -858,7 +867,7 @@ figureS2 <- annotate_figure(panel_plot2,
                 top = text_grob("Factors affecting Reproductive outcomes", color = "black", face = "bold", size = 14),
                 fig.lab = "", fig.lab.face = "bold"
 )
-ggsave(figureS2, filename = "Figure S2.png", width = 9, height = 7, device = "jpeg", dpi = 600,units = "in")
+ggsave(figureS2, filename = "Figure S2.pdf", width = 9, height = 7, device = "pdf", dpi = 600,units = "in")
 
 
 ### save figures 2a and 2b
@@ -929,7 +938,7 @@ age_dist <-ggplot(data=m, aes(age_1940)) +
 
 age_dist
 
-ggsave(age_dist, filename = "Figure S5.png", width = 9, height = 7, device = "png", dpi = 600,units = "in")
+ggsave(age_dist, filename = "Figure S5.pdf", width = 9, height = 7, device = "pdf", dpi = 600,units = "in")
 
 
 
@@ -1020,7 +1029,7 @@ library(forcats)
 
 
 # load main models
-KALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
+KALL <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/Model_kids_all_FULL_INTS.rds")
 
 attach(m)
 Kretb <- tidyr::crossing(
@@ -1373,12 +1382,14 @@ int_2<- hdi(data4$lambda,credMass = 0.89)
 data4 <- data4[which(data4$lambda >min(int_2) & data4$lambda < max(int_2)), ]
 
 
+
+
 #males returned/ no rt, females tr/no rt, males inbred, females inbred
 
 #B47846
 
 
-k4 <- ggplot(data = data4, aes(x = factor(outbred), y = newlambda)) +
+k4 <- ggplot(data = data4, aes(x = factor(outbred), y = lambda)) +
   geom_violin(position = "dodge", fill="#B47846",alpha=0.66)+
   geom_boxplot(width=.1,fill='#A4A4A4', col="darkred",position = "dodge") +
   geom_errorbar(size=0.6,width=0.3,color="black",position="dodge",aes(x=factor(outbred),
@@ -1437,12 +1448,12 @@ figure4b <- annotate_figure(figure4b,
 figure4 <- ggarrange(figure4a,figure4b, nrow=2)
 
 
-ggsave(figure4, filename = "Figure 4a-4b_new.png", width = 4, height = 4, device = "png", dpi = 600,units = "in")
+ggsave(figure4, filename = "Figure 4a-4b_new.pdf", width = 4, height = 4, device = "pdf", dpi = 600,units = "in")
 
 ## Fig 3####################################
 
 # full model
-MALL <- readRDS("C:/Users/rofrly/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
+MALL <- readRDS("C:/Users/robert/Dropbox/Migrations paper/Models for NHB revision/model_30_outbred_all_w_all_interactions.rds")
 
 attach(m)
 obrt <- tidyr::crossing(
@@ -1802,7 +1813,7 @@ scaleFUN <- function(x) sprintf("%.2f", x)
 
 
 
-k8 <- ggplot(data = data8, aes(x = factor(hypergamy), y = newp, position="dodge")) +
+k8 <- ggplot(data = data8, aes(x = factor(hypergamy), y = p, position="dodge")) +
   geom_violin( fill="#B47846",alpha=0.66)+
   geom_boxplot(width=.1,fill='#A4A4A4', col="darkred") +
   geom_errorbar(size=0.6,width=0.3,aes(x=factor(hypergamy),
@@ -1855,7 +1866,7 @@ figure3b <- annotate_figure(figure3b,
 figure3 <- ggarrange(figure3a,figure3b, nrow=2)
 
 
-ggsave(figure3, filename = "Figure 3a-b.png", width = 4, height = 4, device = "png", dpi = 600,units = "in")
+ggsave(figure3, filename = "Figure 3a-b.pdf", width = 4, height = 4, device = "pdf", dpi = 600,units = "in")
 
 
 
